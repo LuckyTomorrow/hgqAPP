@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+</head>
+<body>
+    <header class="aui-bar aui-bar-nav" style="background-color:#EC425B;" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="closeWin();">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title aui-font-size-16">天猫</div>
+    </header>
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+        api.parseTapmode();
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        var headerPos = $api.offset(header);
+        var body_h = $api.offset($api.dom('body')).h;
+        api.openFrame({
+            name: 'tianmao_frm',
+            url: 'https://s.click.taobao.com/t?e=m%3D2%26s%3DULHlvcfCCtMcQipKwQzePCperVdZeJvipRe%2F8jaAHci5VBFTL4hn2YxNhbdxLx%2B0n7yqOUL3SI26%2Fj0MVCk0JfDPUg8lqcnXz6AlYs5mBZ%2B7LVfFVrvAFOTEWJdP8jmRm5UnbMkTZzQAIWlNq522QRoeSzb988W7cSpj5qSCmbA%3D',
+            bounces: true,
+            rect: {
+                x: 0,
+                y: headerPos.h,
+                w: 'auto',
+                h: 'auto'
+            },
+            progress: {
+                type: "page",
+                title: "",
+                text: "",
+                color: "#03a9f4"
+            }
+        });
+
+        api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err) {
+            api.closeWin();
+        });
+      }
+
+    function closeWin(){
+        api.closeWin();
+    }
+
+</script>
+</html>

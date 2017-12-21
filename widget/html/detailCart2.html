@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>分类商品</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style type="text/css">
+        .spanTitle {
+            width: 160px;
+            height: 30px;
+            overflow: hidden;
+            display: block;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="aui-bar aui-bar-nav" style="background-color:#EC425B;" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="closeWin();">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title aui-font-size-16"></div>
+    </header>
+
+    <section class="aui-content">
+
+        <script id="cartTemp" type="text/x-dot-template">
+            {{ for(var i=0; i
+            < it.length; i++) { }} <div class='aui-col-xs-6 aui-margin-b-10 aui-padded-l-5 aui-padded-r-5'>
+                <div class="aui-padded-l-0 aui-padded-r-0" style='border:1px solid #D3D3D3;'>
+                    <a href="{{=it[i].diadurl}}">
+                        <img src="{{=it[i].pic_url}}" onload='ChangePic(this);' style='height:8rem;width:100%;display:none;' />
+                        <img src="../image/loading.png" style='height:8rem;width:100%;' />
+                        <div><span class='spanTitle aui-font-size-14 aui-text-default'>&nbsp{{=it[i].title}}</span>
+                        </div>
+                        <div><span style="color:#EC425B;" class='aui-font-size-20'>&nbsp￥{{=it[i].coupon_quan_price}}</span>&nbsp&nbsp
+                            <del class='aui-font-size-14' style="color:#D3D3D3;">原价:{{=it[i].coupon_price}}</del>
+                        </div>
+                    </a>
+                </div>
+                </div>
+                {{ } }}
+        </script>
+        <div class="aui-row aui-margin-t-10" id="cart"></div>
+
+    </section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script>
+    apiready = function() {
+        keyName = api.pageParam.key;
+        api.parseTapmode();
+
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        var title = $api.dom(header, ".aui-title");
+        $api.text(title, keyName);
+        getCid();
+
+        //下拉刷新设置
+        api.setCustomRefreshHeaderInfo({
+            bgColor: '#C0C0C0',
+            images: {
+                pull: 'widget://image/refresh/pull.png',
+                transform: [
+                    'widget://image/refresh/pull_end_image_frame_01.png',
+                    'widget://image/refresh/pull_end_image_frame_02.png',
+                    'widget://image/refresh/pull_end_image_frame_03.png',
+                    'widget://image/refresh/pull_end_image_frame_04.png',
+                    'widget://image/refresh/pull_end_image_frame_05.png'
+                ],
+                load: [
+                    'widget://image/refresh/refreshing_image_frame_01.png',
+                    'widget://image/refresh/refreshing_image_frame_02.png',
+                    'widget://image/refresh/refreshing_image_frame_03.png',
+                    'widget://image/refresh/refreshing_image_frame_04.png',
+                    'widget://image/refresh/refreshing_image_frame_05.png',
+                    'widget://image/refresh/refreshing_image_frame_06.png'
+                ]
+            }
+        }, function() {
+            getCid();
+            api.refreshHeaderLoadDone();
+        });
+
+        //由于上拉刷新没有提供，需要监听上拉刷新
+        api.addEventListener({
+            name: 'scrolltobottom'
+        }, function(ret, err) {
+            loadData();
+        });
+
+        api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err) {
+            api.closeWin();
+        });
+
+    }
+
+    var intData;
+    //点击横向tab，ajax获取特定商品
+    function getCid() {
+        page = 1;
+        api.ajax({
+            url: 'http://www.zaixianclock.com/App/Index/keyword',
+            method: 'post',
+            data: {
+                values: {
+                    cartId: keyName,
+                    page: page
+                }
+            }
+        }, function(ret, err) {
+            if (JSON.stringify(ret) !== "[]") {
+                //如果获取成功，将返回的数据进行js模板排列数据
+                InitGoodsList(ret);
+                intData = ret;
+            } else {
+                alert("暂无所需商品");
+            }
+        });
+    }
+
+    //合并两个json数组对象
+    function mergerJsonArr(intData, ret) {
+        var resultJsonObject = [];
+        for (var i = 0; i < intData.length; i++) {
+            resultJsonObject.push(intData[i]);
+        }
+        for (var i = 0; i < ret.length; i++) {
+            resultJsonObject.push(ret[i]);
+        }
+        return resultJsonObject;
+    }
+
+    //js模板引擎，用于循环排列商品信息
+    function InitGoodsList(ret) {
+        var datas = ret;
+        var dataText = doT.template($api.dom('#cartTemp').innerHTML);
+        $api.dom('#cart').innerHTML = dataText(datas);
+    }
+
+    //在网上图片加载成功后切换图片
+    function ChangePic(node) {
+        var nextNode = $api.next(node);
+        $api.css(node, "display:block");
+        $api.css(nextNode, "display:none");
+    }
+
+    var page = 1;
+
+    //上拉刷新，ajax请求新的数据
+    function loadData() {
+        page += 1;
+        api.ajax({
+            url: 'http://www.zaixianclock.com/App/Index/keyword',
+            method: 'post',
+            data: {
+                values: {
+                    cartId: keyName,
+                    page: page
+                }
+            }
+        }, function(ret, err) {
+            if (JSON.stringify(ret) !== "[]") {
+                //如果获取成功，将返回的数据进行js模板排列数据
+                if (intData) {
+                    intData = mergerJsonArr(intData, ret);
+                    InitGoodsList(intData);
+                }
+            } else {
+                page -= 1;
+            }
+        });
+    }
+
+    function closeWin(){
+      api.closeWin();
+    }
+</script>
+
+</html>

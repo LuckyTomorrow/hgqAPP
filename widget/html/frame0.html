@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>首页</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-slide.css" />
+</head>
+
+<body id="body">
+    <!--顶部搜索框-->
+    <div class="aui-bar aui-bar-nav " style="background-color: #EC425B" id='header'>
+        <a class="aui-pull-left aui-btn">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title" style="left:2rem; right: 2rem;">
+            <div class="aui-searchbar" style="background-color: #EC425B">
+                <div class="aui-searchbar-input aui-border-radius">
+                    <i class="aui-iconfont aui-icon-search"></i>
+                    <form onsubmit="searchKeyWords();">
+                        <input type="search" placeholder="搜你所爱" id="search-input">
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="aui-pull-right aui-btn" tapmode onclick="openSharebox();">
+            <span class="aui-iconfont aui-icon-share"></span>
+        </div>
+    </div>
+    <!--顶部搜索框-->
+    <!--轮播图-->
+    <section class="aui-content">
+        <div id="aui-slide3">
+            <div class="aui-slide-wrap">
+                <div class="aui-slide-node bg-dark" tapmode onclick="openPic(0);">
+                    <img src="../image/chaoshi.jpg" />
+                </div>
+                <div class="aui-slide-node bg-dark" tapmode onclick="openPic(1);">
+                    <img src="../image/shouji.jpg" />
+                </div>
+                <div class="aui-slide-node bg-dark" tapmode onclick="openPic(2);">
+                    <img src="../image/feizhu.jpg" />
+                </div>
+            </div>
+            <div class="aui-slide-page-wrap">
+                <!--分页容器-->
+            </div>
+        </div>
+    </section>
+    <!--轮播图-->
+
+    <!--中部九宫格样式按钮-->
+    <section class="aui-grid aui-margin-t-10">
+        <div class="aui-row">
+            <div class="aui-col-xs-3" tapmode onclick="jumpto('tianmao_win');">
+                <i class="aui-iconfont aui-icon-tianmao" style='color:#EC425B;'></i>
+                <div class="aui-grid-label">天猫入口</div>
+            </div>
+            <div class="aui-col-xs-3" tapmode onclick="jumpto('chongzhi_win');">
+                <i class="aui-iconfont aui-icon-huafei" style='color:rgb(93,172,129);'></i>
+                <div class="aui-grid-label">话费充值</div>
+            </div>
+            <div class="aui-col-xs-3" tapmode onclick="jumpto('3c_win');">
+                <i class="aui-iconfont aui-icon-shuma" style='color:#003371;'></i>
+                <div class="aui-grid-label">3C产品</div>
+            </div>
+            <div class="aui-col-xs-3" tapmode onclick="jumpto('juhs_win');">
+                <i class="aui-iconfont aui-icon-juhuasuan" style='color:#d81e06;'></i>
+                <div class="aui-grid-label">聚划算</div>
+            </div>
+        </div>
+    </section>
+    <!--中部九宫格样式按钮-->
+
+    <!--女生商品推荐-->
+    <div class="aui-content aui-margin-t-15" style="height: 2rem;width:100%;">
+        <img src="../image/logo_girl.png" style="height: 100%;">
+    </div>
+    <section class="aui-content aui-margin-b-15">
+        <div class="aui-list-item-inner">
+            <div class="aui-row aui-row-padded">
+                <div class="aui-col-xs-4" tapmode onclick="openCart('girlshoe');">
+                    <img src="../image/womenshoe.png" />
+                </div>
+                <div class="aui-col-xs-4" tapmode onclick="openCart('girlqunzi');">
+                    <img src="../image/girlqunzi.png" />
+                </div>
+                <div class="aui-col-xs-4" tapmode onclick="openCart('girlcaizhuang');">
+                    <img src="../image/caizhuang.png" />
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--女生商品推荐-->
+
+    <!--男生商品推荐-->
+    <div class="aui-content aui-margin-t-15" style="height: 2rem;width:100%;">
+        <img src="../image/logo_boy.png" style="height: 100%;">
+    </div>
+    <section class="aui-content aui-margin-b-15">
+        <div class="aui-list-item-inner">
+            <div class="aui-row aui-row-padded">
+                <div class="aui-col-xs-4" tapmode onclick="openCart('boyhuabanxie');">
+                    <img src="../image/huabanxie.png" />
+                </div>
+                <div class="aui-col-xs-4" tapmode onclick="openCart('boyTxu');">
+                    <img src="../image/boyTxu.png" />
+                </div>
+                <div class="aui-col-xs-4" tapmode onclick="openCart('boyerji');">
+                    <img src="../image/erji.png" />
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--男生商品推荐-->
+
+    <!--更多商品推荐-->
+    <div class="aui-content aui-margin-t-15" style="height: 2rem;width:100%;">
+        <img src="../image/logo_more.png" style="height: 100%;">
+    </div>
+
+    <!--更多商品推荐-->
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/aui-slide.js"></script>
+
+<script type="text/javascript">
+    apiready = function() {
+        api.parseTapmode();
+        header = $api.byId('header');
+        $api.fixStatusBar(header);
+    }
+
+    var slide3 = new auiSlide({
+        container: document.getElementById("aui-slide3"),
+        // "width":300,
+        "height": 180,
+        "speed": 500,
+        "autoPlay": 2500, //自动播放
+        "loop": true,
+        "pageShow": true,
+        "pageStyle": 'line',
+        'dotPosition': 'center'
+    });
+
+    function jumpto(urlName) {
+        api.openWin({
+            name: urlName,
+            url: './' + urlName + '.html'
+        });
+    }
+
+    function openPic(index) {
+        api.openWin({
+            name: 'lunbo',
+            url: './lunbo.html',
+            pageParam: {
+                index: index
+            }
+        });
+
+    }
+
+    function openCart(cartId) {
+        api.openWin({
+            name: 'cartWin',
+            url: './cartWin.html',
+            pageParam: {
+                cartId: cartId
+            }
+        });
+
+    }
+    //搜索框查询 keyword商品
+    function searchKeyWords() {
+        var el = $api.byId('search-input');
+        var keyword = $api.val(el);
+        api.openWin({
+            name: 'searchWin',
+            url: './searchKey.html',
+            pageParam: {
+                cartId: keyword
+            }
+        });
+        return false;
+    }
+</script>
+
+</html>

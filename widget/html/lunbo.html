@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav" style="background-color:#EC425B;" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="closeWin();">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title aui-font-size-16"></div>
+    </header>
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        index = api.pageParam.index;
+        titleName = "";
+        switch (index) {
+            case 0:
+                titleName = "天猫超市";
+                break;
+            case 1:
+                titleName = "手机会场";
+                break;
+            case 2:
+                titleName = "飞猪旅行";
+                break;
+        }
+
+        api.parseTapmode();
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        var title = $api.dom(header, ".aui-title");
+        $api.text(title, titleName);
+
+        var headerPos = $api.offset(header);
+        var body_h = $api.offset($api.dom('body')).h;
+
+        switch (index) {
+            case 0:
+                api.openFrame({
+                    name: 'chaoshi',
+                    url: 'https://s.click.taobao.com/t?e=m%3D2%26s%3Dde0SQ%2FbAa%2BUcQipKwQzePDAVflQIoZeppRe%2F8jaAHci5VBFTL4hn2ZIpnydBAUYQZW7hPg9Hazi6%2Fj0MVCk0JfDPUg8lqcnXz6AlYs5mBZ9ZCnjbDN9u2hGIBQCPmFeJbJBdwKCoumU%3D',
+                    bounces: true,
+                    rect: {
+                        x: 0,
+                        y: headerPos.h,
+                        w: 'auto',
+                        h: 'auto'
+                    },
+                    progress: {
+                        type: "page",
+                        title: "",
+                        text: "",
+                        color: "#03a9f4"
+                    }
+                });
+                break;
+            case 1:
+            api.openFrame({
+                name: 'shouji',
+                url: 'https://s.click.taobao.com/t?e=m%3D2%26s%3DQIZQyTQS7SscQipKwQzePCperVdZeJvipRe%2F8jaAHci5VBFTL4hn2WS55Fk1QmaZr8hK%2FDw%2Bbm26%2Fj0MVCk0JfDPUg8lqcnXz6AlYs5mBZ%2B7LVfFVrvAFOTEWJdP8jmRVUPWAbs25fwX9msztp91oH48ZegCJ4javzdJIaErDgpqcj6GBiacy0bjJt3bJXnsTrisumRq1fIjy4ZLJ4arY4Z%2BIlkIzAf9gYNiG1P4WRbgsZ8oBlZG6LrDq7FRLN7xqBwIinl%2BZ9dKat5%2Fy65XMpF0YyI6VBYUM%2FAbXoRzAGpvLTeYE5AWs54dKpr9oSfdK2HqUYzVPsRceVQCWyEjTqMFa1bipraVsTzeekfh9EtC0FYkyQI2ooShTjJ51zGWWijl4Vj7nd0%3D',
+                bounces: true,
+                rect: {
+                    x: 0,
+                    y: headerPos.h,
+                    w: 'auto',
+                    h: 'auto'
+                },
+                progress: {
+                    type: "page",
+                    title: "",
+                    text: "",
+                    color: "#03a9f4"
+                }
+            });
+            break;
+            case 2:
+            api.openFrame({
+                name: 'feizhu',
+                url: 'https://s.click.taobao.com/t?e=m%3D2%26s%3DrBRnnrTOmm0cQipKwQzePCperVdZeJviEViQ0P1Vf2kguMN8XjClAqZCX9SMDpa6ct2YoOHDYMIC6o9y7l6B%2BW2Dh4HrFQ%2B5CIO1pQ1KYJz%2F1naxQvezKIK88P%2FKzi0kxxWvg6Zgs%2BvkxFiXT%2FI5kZuVJ2zJE2c04QKzOCZhluJq%2BPm1ievEObQBEjTHQq6TxML29N%2F6x4IM%2Bw%2FMzDoec6Vr7%2F%2Fw2eCVtJn0SzMRE3nHJIHpEu%2BWlMdcx4oeG4CyQIG14t2Mex73QVlwmXDfxhGJl8vaLkh%2BHh8ZNx%2BUM3To5z0gtjY3Q28tN5gTkBaznh0qmv2hJ90rYepRjNU%2BxFx5VAJbISNOai3u5RlHs26xPN56R%2BH0S7nlO0Y1NGZv4MVF7kvAhLVdq%2Bxnob%2FztsYl7w3%2FA2kb',
+                bounces: true,
+                rect: {
+                    x: 0,
+                    y: headerPos.h,
+                    w: 'auto',
+                    h: 'auto'
+                },
+                progress: {
+                    type: "page",
+                    title: "",
+                    text: "",
+                    color: "#03a9f4"
+                }
+            });
+            break;
+        }
+
+        api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err) {
+            api.closeWin();
+        });
+
+    }
+
+    function closeWin() {
+        api.closeWin();
+    }
+</script>
+
+</html>

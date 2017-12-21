@@ -1,0 +1,187 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style type="text/css">
+        .spanTitle {
+            width: 160px;
+            height: 30px;
+            overflow: hidden;
+            display: block;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav" style="background-color:#EC425B;" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="closeWin();">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title aui-font-size-16">所有商品</div>
+    </header>
+
+    <section class="aui-content">
+
+        <script id="cartTemp" type="text/x-dot-template">
+            {{ for(var i=0; i < it.length; i++) { }}
+            <div class='aui-col-xs-6 aui-margin-b-10 aui-padded-l-5 aui-padded-r-5'>
+                <div class="aui-padded-l-0 aui-padded-r-0" style='border:1px solid #D3D3D3;'>
+                    <a href="{{=it[i].diadurl}}">
+                        <img src="{{=it[i].pic_url}}" onload='lazyImg(this);' style='height:8rem;width:100%;display:none;' />
+                        <img src="../image/loading.png" style='height:8rem;width:100%;' />
+                        <div><span class='spanTitle aui-font-size-14 aui-text-default'>&nbsp{{=it[i].title}}</span>
+                        </div>
+                        <div><span style="color:#EC425B;" class='aui-font-size-20'>&nbsp￥{{=it[i].coupon_quan_price}}</span>&nbsp&nbsp
+                            <del class='aui-font-size-14' style="color:#D3D3D3;" >原价:{{=it[i].coupon_price}}</del>
+                        </div>
+                    </a>
+                </div>
+             </div>
+                {{ } }}
+        </script>
+        <div class="aui-row aui-margin-t-10" id="cart"></div>
+
+    </section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/aui-lazyload.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        cartId = api.pageParam.cartId;
+        pagecount = 1;
+
+        api.parseTapmode();
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        frameInit();
+
+        //下拉刷新设置
+        api.setCustomRefreshHeaderInfo({
+            bgColor: '#C0C0C0',
+            images: {
+                pull: 'widget://image/refresh/pull.png',
+                transform: [
+                    'widget://image/refresh/pull_end_image_frame_01.png',
+                    'widget://image/refresh/pull_end_image_frame_02.png',
+                    'widget://image/refresh/pull_end_image_frame_03.png',
+                    'widget://image/refresh/pull_end_image_frame_04.png',
+                    'widget://image/refresh/pull_end_image_frame_05.png'
+                ],
+                load: [
+                    'widget://image/refresh/refreshing_image_frame_01.png',
+                    'widget://image/refresh/refreshing_image_frame_02.png',
+                    'widget://image/refresh/refreshing_image_frame_03.png',
+                    'widget://image/refresh/refreshing_image_frame_04.png',
+                    'widget://image/refresh/refreshing_image_frame_05.png',
+                    'widget://image/refresh/refreshing_image_frame_06.png'
+                ]
+            }
+        }, function() {
+            frameInit();
+            api.refreshHeaderLoadDone();
+        });
+
+        //由于上拉刷新没有提供，需要监听上拉刷新
+        api.addEventListener({
+            name: 'scrolltobottom'
+        }, function(ret, err) {
+            loadData();
+        });
+
+        api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err) {
+            api.closeWin();
+
+        });
+    }
+
+    //上拉刷新，ajax请求新的数据
+    function loadData() {
+        pagecount += 1;
+        api.ajax({
+            url: 'http://www.zaixianclock.com/App/Index/keyword',
+            method: 'post',
+            data: {
+                values: {
+                    cartId: cartId,
+                    page:pagecount
+                }
+            }
+        }, function(ret, err) {
+            if (JSON.stringify(ret) !== "[]") {
+                //如果获取成功，将返回的数据进行js模板排列数据
+                if (intData) {
+                    intData = mergerJsonArr(intData, ret);
+                    InitGoodsList(intData);
+                }
+            } else {
+              pagecount -= 1;
+            }
+        });
+
+    }
+
+    //合并两个json对象
+    function mergerJsonArr(intData, ret) {
+        var resultJsonObject = [];
+        for (var i = 0; i < intData.length; i++) {
+            resultJsonObject.push(intData[i]);
+        }
+        for (var i = 0; i < ret.length; i++) {
+            resultJsonObject.push(ret[i]);
+        }
+        return resultJsonObject;
+    }
+
+    //apiready后对聚划算frame进行初始化数据的ajax获取
+    function frameInit() {
+        api.ajax({
+            url: 'http://www.zaixianclock.com/App/Index/keyword',
+            method: 'post',
+            data: {
+                values: {
+                    cartId: cartId,
+                    page:1
+                }
+            }
+        }, function(ret, err) {
+            if (JSON.stringify(ret) !== "[]") {
+                //如果获取成功，将返回的数据进行js模板排列数据
+                InitGoodsList(ret);
+                intData = ret;
+                pagecount = 1;
+            } else {
+                alert("暂无所需商品");
+            }
+        });
+    }
+
+    function InitGoodsList(ret) {
+        var datas = ret;
+        var dataText = doT.template($api.dom('#cartTemp').innerHTML);
+        $api.dom('#cart').innerHTML = dataText(datas);
+    }
+
+    //aui图片懒加载插件
+    function lazyImg(tmp){
+      var nextImg = $api.next(tmp);
+      $api.css(tmp,'display:block');
+      $api.css(nextImg,'display:none');
+    }
+
+    function closeWin(){
+      api.closeWin();
+    }
+</script>
+
+</html>

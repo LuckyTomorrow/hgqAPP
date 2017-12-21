@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+</head>
+<body>
+    <header class="aui-bar aui-bar-nav" style="background-color:#EC425B;" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="closeWin();">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title">聚划算</div>
+    </header>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+        api.parseTapmode();
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        var headerPos = $api.offset(header);
+        var body_h = $api.offset($api.dom('body')).h;
+        api.openFrame({
+            name: 'juhs_frm',
+            url: 'https://s.click.taobao.com/t?e=m%3D2%26s%3DuNQSJUlwxqscQipKwQzePCperVdZeJviK7Vc7tFgwiFRAdhuF14FMSuICjro2gVBlovu%2FCElQOsiqkplHxxTYugXSgIzhIPocrcJ1Eu3Czi%2BlirzZY1mh44nZdlWtg%2FJuH1hWG3%2BVYSM%2BhtH71aX6jbwk8Q7zPIohHv2EM0CfJx3NmLS8c84vGtnJplpnygCllD%2BzUqQpTtj4toz2Mgv75wIqRHwxvj3nDWCSR8SND%2BiZ%2BQMlGz6FQ%3D%3D',
+            bounces: true,
+            rect: {
+                x: 0,
+                y: headerPos.h,
+                w: 'auto',
+                h: 'auto'
+            }
+        });
+
+        api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err) {
+            api.closeWin();
+        });
+
+      }
+
+    function closeWin(){
+        api.closeWin();
+    }
+
+</script>
+</html>

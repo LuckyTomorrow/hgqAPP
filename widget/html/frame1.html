@@ -1,0 +1,326 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+        #main {
+            padding: 0;
+        }
+        /* home页具体内容 */
+
+        .headlines {
+            width: 100%;
+            padding-top: 1em;
+            background-color: #FFFFFF;
+        }
+
+        .container .title {
+            text-indent: 13px;
+            color: #58616D;
+            width: 100%;
+            display: block;
+        }
+
+        .container .brief {
+            text-indent: 13px;
+            font-size: 0.7em;
+            color: #BDBDBD;
+            width: 100%;
+            margin: 6px 0 3px 0;
+            display: block;
+        }
+        /*行业精选*/
+
+        .industry_select {}
+
+        .industry {
+            background-color: #FFF;
+            margin-bottom: 0.75em;
+        }
+
+        .reload_header {
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+
+        .reload_header .title {
+            float: left;
+            width: auto;
+        }
+
+        .reload_header .reload {
+            float: right;
+            color: #BDBDBD;
+            border-radius: 3px;
+            text-align: center;
+            width: 5em;
+            font-size: 0.8em;
+            height: 1.5em;
+            line-height: 1.4em;
+        }
+
+        .reload_header .reload .reload_icon {
+            width: 1em;
+            height: 1em;
+            display: inline-block;
+            background: url(../../res/img/tm_home_refresh_small_normal.png) center center no-repeat;
+            background-size: 100% 100%;
+            vertical-align: baseline;
+        }
+
+        .reload_header .reload:active,
+        .reload_header .reload.tap-active {
+            background-color: #666666;
+        }
+
+        .reload_header .reload:active .reload_icon,
+        .reload_header .reload.tap-active .reload_icon {
+            background: url(../../res/img/tm_home_refresh_small_press.png) center center no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .industry_left {
+            padding-top: 1em;
+            width: 50%;
+            float: left;
+        }
+
+        .industry_right {
+            width: 50%;
+            float: left;
+        }
+
+        .industry_right img {
+            width: 100%;
+            display: block;
+        }
+        /*行业精选end*/
+        /* home页具体内容 end */
+    </style>
+</head>
+
+<body>
+    <!--顶部搜索框-->
+    <div class="aui-bar aui-bar-nav " style="background-color: #EC425B" id='header'>
+        <a class="aui-pull-left aui-btn">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title" style="left:2rem; right: 2rem;">
+            <div class="aui-searchbar" style="background-color: #EC425B">
+                <div class="aui-searchbar-input aui-border-radius">
+                    <i class="aui-iconfont aui-icon-search"></i>
+                    <form onsubmit="searchKeyWords();">
+                        <input type="search" placeholder="搜你所爱" id="search-input">
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="aui-pull-right aui-btn" tapmode onclick="openSharebox();">
+            <span class="aui-iconfont aui-icon-share"></span>
+        </div>
+    </div>
+    <!--顶部搜索框-->
+    <div id="wrap">
+        <div id="main">
+            <!-- 下方详情 -->
+            <div class="container">
+                <div class="industry_select clearfix">
+                    <!-- 行业精选 -->
+                    <div class="sp1_2 industry clearfix aui-col-xs-6" tapmode="tap-active" data-title="精品女装" onclick="toDetail(1,'女装');">
+                        <div class="industry_left">
+                            <span class="title">女装</span>
+                            <span class="brief">手机优先购</span>
+                        </div>
+                        <div class="industry_right">
+                            <img src="../image/index/index_img_i1.png" alt="">
+                        </div>
+                    </div>
+                    <div class="sp1_2 industry clearfix aui-col-xs-6" tapmode="tap-active" data-title="数码城" onclick="toDetail(10,'数码城');">
+                        <div class="industry_left">
+                            <span class="title">数码城</span>
+                            <span class="brief">玩转时尚科技</span>
+                        </div>
+                        <div class="industry_right">
+                            <img src="../image/index/index_img_i2.png" alt="">
+                        </div>
+                    </div>
+                    <div class="sp1_2 industry clearfix aui-col-xs-6" tapmode="tap-active" data-url="http://nvzhuang.tmall.com" data-title="女鞋" onclick="toDetail2('女鞋');">
+                        <div class="industry_left">
+                            <span class="title">女鞋</span>
+                            <span class="brief">抢秋冬新款</span>
+                        </div>
+                        <div class="industry_right">
+                            <img src="../image/index/index_img_i3.png" alt="">
+                        </div>
+                    </div>
+                    <div class="sp1_2 industry clearfix aui-col-xs-6" tapmode="tap-active" data-title="男装" onclick="toDetail(2,'男装');">
+                        <div class="industry_left">
+                            <span class="title">男装</span>
+                            <span class="brief">潮男搭配</span>
+                        </div>
+                        <div class="industry_right">
+                            <img src="../image/index/index_img_i4.png" alt="">
+                        </div>
+                    </div>
+                    <div class="sp1_2 industry clearfix" tapmode="tap-active" data-url="http://nvzhuang.tmall.com" data-title="箱包" onclick="toDetail(4,'箱包');">
+                        <div class="industry_left">
+                            <span class="title">箱包</span>
+                            <span class="brief">包你满意</span>
+                        </div>
+                        <div class="industry_right">
+                            <img src="../image/index/index_img_i5.png" alt="">
+                        </div>
+                    </div>
+                    <div class="sp1_2 industry clearfix" tapmode="tap-active" data-title="男鞋" onclick="toDetail2('男鞋');">
+                        <div class="industry_left">
+                            <span class="title">男鞋</span>
+                            <span class="brief">英伦休闲季</span>
+                        </div>
+                        <div class="industry_right">
+                            <img src="../image/index/index_img_i6.png" alt="">
+                        </div>
+                    </div>
+                    <div class="sp1_2 industry clearfix" tapmode="tap-active" data-title="美妆" onclick="toDetail2('化妆品');">
+                        <div class="industry_left">
+                            <span class="title">美妆</span>
+                            <span class="brief">光彩照人</span>
+                        </div>
+                        <div class="industry_right">
+                            <img src="../image/index/index_img_i7.png" alt="">
+                        </div>
+                    </div>
+                    <div class="sp1_2 industry clearfix" tapmode="tap-active" data-url="http://nvzhuang.tmall.com" data-title="美食" onclick="toDetail(7,'美食');">
+                        <div class="industry_left">
+                            <span class="title">美食</span>
+                            <span class="brief">说多了都是口水</span>
+                        </div>
+                        <div class="industry_right">
+                            <img src="../image/index/index_img_i8.png" alt="">
+                        </div>
+                    </div>
+                    <div class="sp1_2 industry clearfix" tapmode="tap-active" data-url="http://nvzhuang.tmall.com" data-title="运动" onclick="toDetail2('运动');">
+                        <div class="industry_left">
+                            <span class="title">运动</span>
+                            <span class="brief">爱运动</span>
+                        </div>
+                        <div class="industry_right">
+                            <img src="../image/index/index_img_i9.png" alt="">
+                        </div>
+                    </div>
+                    <div class="sp1_2 industry clearfix" tapmode="tap-active" data-url="http://nvzhuang.tmall.com" data-title="居家" onclick="toDetail(6,'居家');">
+                        <div class="industry_left">
+                            <span class="title">居家</span>
+                            <span class="brief">精品生活</span>
+                        </div>
+                        <div class="industry_right">
+                            <img src="../image/index/index_img_i10.png" alt="">
+                        </div>
+                    </div>
+                    <div class="sp1_2 industry clearfix" tapmode="tap-active" data-url="http://nvzhuang.tmall.com" data-title="母婴" onclick="toDetail(11,'母婴');">
+                        <div class="industry_left">
+                            <span class="title">母婴</span>
+                            <span class="brief">萌装过冬</span>
+                        </div>
+                        <div class="industry_right">
+                            <img src="../image/index/index_img_i11.png" alt="">
+                        </div>
+                    </div>
+                    <div class="sp1_2 industry clearfix" tapmode="tap-active" data-url="http://nvzhuang.tmall.com" data-title="家居" onclick="toDetail(6,'家居');">
+                        <div class="industry_left">
+                            <span class="title">家居</span>
+                            <span class="brief">实惠装新家</span>
+                        </div>
+                        <div class="industry_right">
+                            <img src="../image/index/index_img_i13.png" alt="">
+                        </div>
+                    </div>
+                    <div class="sp1_2 industry clearfix" tapmode="tap-active" data-url="http://nvzhuang.tmall.com" data-title="内衣" onclick="toDetail(8,'内衣');">
+                        <div class="industry_left">
+                            <span class="title">内衣</span>
+                            <span class="brief">暖在心里</span>
+                        </div>
+                        <div class="industry_right">
+                            <img src="../image/index/index_img_i14.png" alt="">
+                        </div>
+                    </div>
+                    <div class="sp1_2 industry clearfix" tapmode="tap-active" data-url="http://nvzhuang.tmall.com" data-title="家电" onclick="toDetail(5,'家电');">
+                        <div class="industry_left">
+                            <span class="title">家电</span>
+                            <span class="brief">我为家电狂</span>
+                        </div>
+                        <div class="industry_right">
+                            <img src="../image/index/index_img_i16.png" alt="">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- 下方详情 end -->
+
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/zepto.js"></script>
+<script type="text/javascript" src="../script/swipe.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        api.parseTapmode();
+        header = $api.byId('header');
+        $api.fixStatusBar(header);
+        Zepto(function($) {
+            // home页 样式 初始化
+            var sp1_2;
+            var em = parseInt(getComputedStyle(document.body, false).fontSize);
+            var emW = em * 3 / 4;
+            var bodyW = $api.offset(document.body).w;
+            sp1_2 = (bodyW - 3 * emW) / 2;
+            $('.sp1_2').width(sp1_2);
+            // home页 样式 初始化 end
+        });
+    }
+
+    function toDetail(cid, title) {
+        api.openWin({
+            name: 'detailCid',
+            url: './detailCart.html',
+            pageParam: {
+                cid: cid,
+                title: title
+            }
+        });
+    }
+
+    function toDetail2(keyword) {
+        api.openWin({
+            name: 'detailCid2',
+            url: './detailCart2.html',
+            pageParam: {
+                key: keyword
+            }
+        });
+    }
+
+    //搜索框查询 keyword商品
+    function searchKeyWords() {
+        var el = $api.byId('search-input');
+        var keyword = $api.val(el);
+        api.openWin({
+            name: 'searchWin',
+            url: './searchKey.html',
+            pageParam: {
+                cartId: keyword
+            }
+        });
+        return false;
+    }
+</script>
+
+</html>

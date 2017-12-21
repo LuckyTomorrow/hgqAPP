@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>惠购券</title>
+    <link rel="stylesheet" type="text/css" href="./css/aui.css" />
+    </style>
+</head>
+
+<body>
+
+
+    <footer class="aui-bar aui-bar-tab" id="footer">
+        <div class="aui-bar-tab-item" tapmode onclick="randomSwitchBtn(0);">
+            <i class="aui-iconfont aui-icon-home"></i>
+            <div class="aui-bar-tab-label">首页</div>
+        </div>
+        <div class="aui-bar-tab-item" tapmode onclick="randomSwitchBtn(1);">
+            <i class="aui-iconfont aui-icon-menu"></i>
+            <div class="aui-bar-tab-label">分类</div>
+        </div>
+        <div class="aui-bar-tab-item" tapmode onclick="randomSwitchBtn(2);">
+            <i class="aui-iconfont aui-icon-juhuasuan"></i>
+            <div class="aui-bar-tab-label">聚划算</div>
+        </div>
+        <div class="aui-bar-tab-item" tapmode onclick="randomSwitchBtn(3);">
+            <i class="aui-iconfont aui-icon-haiwai"></i>
+            <div class="aui-bar-tab-label">海外购</div>
+        </div>
+        <div class="aui-bar-tab-item" tapmode onclick="randomSwitchBtn(4);">
+            <i class="aui-iconfont aui-icon-taoqg"></i>
+            <div class="aui-bar-tab-label">淘抢购</div>
+        </div>
+    </footer>
+
+</body>
+<script type="text/javascript" src="./script/api.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script type="text/javascript">
+    //先设置头部高度，再在main区域打开frame
+    apiready = function() {
+        api.parseTapmode();
+        footer = 　$api.byId('footer');
+
+        body_h = api.winHeight;
+        footer_h = $api.offset(footer).h;
+
+        funIniGroup();
+    }
+
+    function funIniGroup() {
+        var eFootLis = $api.domAll(footer, '.aui-bar-tab-item'),
+            frames = [];
+        for (var i = 0, len = eFootLis.length; i < len; i++) {
+            frames.push({
+                name: 'frame' + i,
+                url: './html/frame' + i + '.html',
+                bgColor: 'rgba(0,0,0,0)',
+                bounces: false
+            });
+        }
+        api.openFrameGroup({
+            name: 'group',
+            scrollEnabled: false,
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: body_h - footer_h
+            },
+            index: 0,
+            frames: frames
+        }, function(ret, err) {
+            if (ret) {
+                //当前frame变化后的callback，常用于左右滑动frame后，改变对应底部/顶部样式
+                randomChangeCss(ret.index);
+            }
+        });
+    }
+
+    //来回切换frame，改变底部样式
+    function randomChangeCss(_index) {
+        var footer = 　$api.byId('footer');
+        var eFootLis = $api.domAll(footer, '.aui-bar-tab-item'),
+            eSonI = $api.domAll(footer, '.aui-bar-tab-item i'),
+            eSonDiv = $api.domAll(footer, '.aui-bar-tab-item .aui-bar-tab-label');
+
+        for (var i = 0, len = eFootLis.length; i < len; i++) {
+            $api.removeCls(eSonI[i], 'aui-text-danger');
+            $api.removeCls(eSonDiv[i], 'aui-text-danger');
+            if (_index == i) {
+                $api.addCls(eSonI[i], 'aui-text-danger');
+                $api.addCls(eSonDiv[i], 'aui-text-danger');
+            }
+        }
+    }
+
+    // 随意切换按钮
+    function randomSwitchBtn(_index) {
+        randomChangeCss(_index);
+        api.setFrameGroupIndex({
+            name: 'group',
+            index: _index
+        });
+    }
+
+    //分享方式
+    function openSharebox() {
+        api.openFrame({
+            name: 'share',
+            url: './html/sharebox.html',
+            rect: {
+                x: 0,
+                y: header_h,
+                w: 'auto',
+                h: body_h * 0.25
+            },
+            pageParam: {
+                name: 'test'
+            },
+            bounces: true,
+            bgColor: 'rgba(0,0,0,0)',
+            vScrollBarEnabled: true,
+            hScrollBarEnabled: true
+        });
+
+    }
+</script>
+
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>海外购</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style type="text/css">
+        .spanTitle {
+            width: 160px;
+            height: 30px;
+            overflow: hidden;
+            display: block;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+  <!--顶部搜索框-->
+  <div class="aui-bar aui-bar-nav " style="background-color: #EC425B" id='header'>
+      <a class="aui-pull-left aui-btn">
+          <span class="aui-iconfont aui-icon-left"></span>
+      </a>
+      <div class="aui-title" style="left:2rem; right: 2rem;">
+          <div class="aui-searchbar" style="background-color: #EC425B">
+              <div class="aui-searchbar-input aui-border-radius">
+                  <i class="aui-iconfont aui-icon-search"></i>
+                  <form onsubmit="searchKeyWords();">
+                      <input type="search" placeholder="搜你所爱" id="search-input">
+                  </form>
+              </div>
+          </div>
+      </div>
+      <div class="aui-pull-right aui-btn" tapmode onclick="openSharebox();">
+          <span class="aui-iconfont aui-icon-share"></span>
+      </div>
+  </div>
+  <!--顶部搜索框-->
+    <!--分类标签-->
+
+    <!--分类标签-->
+
+    <!--商品排列-->
+    <section class="aui-content">
+
+        <script id="juhsTemp" type="text/x-dot-template">
+            {{ for(var i=0; i < it.length; i++) { }}
+            <div class='aui-col-xs-6 aui-margin-b-10 aui-padded-l-5 aui-padded-r-5'>
+                <div class="aui-padded-l-0 aui-padded-r-0" style='border:1px solid #D3D3D3;'>
+                    <a href="{{=it[i].diadurl}}">
+                        <img src="{{=it[i].pic_url}}" onload='ChangePic(this);' style='height:8rem;width:100%;display:none;' />
+                        <img src="../image/loading.png" style='height:8rem;width:100%;display:block' />
+                        <div><span class='spanTitle aui-font-size-14 aui-text-default'>&nbsp{{=it[i].title}}</span>
+                        </div>
+                        <div><span style="color:#EC425B;" class='aui-font-size-20'>&nbsp￥{{=it[i].coupon_quan_price}}</span>&nbsp&nbsp
+                            <del class='aui-font-size-14' style="color:#D3D3D3;">原价:{{=it[i].coupon_price}}</del>
+                        </div>
+                    </a>
+                </div>
+              </div>
+                {{ } }}
+        </script>
+        <div class="aui-row aui-margin-t-10" id="juhs"></div>
+
+    </section>
+    <!--商品排列-->
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+      api.parseTapmode();
+      header = $api.byId('header');
+      $api.fixStatusBar(header);
+        frameInit();
+        //下拉刷新设置
+        api.setCustomRefreshHeaderInfo({
+            bgColor: '#C0C0C0',
+            images: {
+                pull: 'widget://image/refresh/pull.png',
+                transform: [
+                    'widget://image/refresh/pull_end_image_frame_01.png',
+                    'widget://image/refresh/pull_end_image_frame_02.png',
+                    'widget://image/refresh/pull_end_image_frame_03.png',
+                    'widget://image/refresh/pull_end_image_frame_04.png',
+                    'widget://image/refresh/pull_end_image_frame_05.png'
+                ],
+                load: [
+                    'widget://image/refresh/refreshing_image_frame_01.png',
+                    'widget://image/refresh/refreshing_image_frame_02.png',
+                    'widget://image/refresh/refreshing_image_frame_03.png',
+                    'widget://image/refresh/refreshing_image_frame_04.png',
+                    'widget://image/refresh/refreshing_image_frame_05.png',
+                    'widget://image/refresh/refreshing_image_frame_06.png'
+                ]
+            }
+        }, function() {
+            //下拉刷新
+            frameInit();
+            //刷新成功后取消刷新动画效果
+            api.refreshHeaderLoadDone();
+        });
+
+        //由于上拉刷新没有提供，需要监听上拉刷新
+        api.addEventListener({
+            name: 'scrolltobottom'
+        }, function(ret, err) {
+            loadData();
+        });
+
+    }
+
+    //页数即位一次ajax请求增加的商品数
+    var pagecount = 0;
+    //data数据
+    var intData;
+    //上拉刷新，ajax请求新的数据
+    function loadData() {
+        pagecount = pagecount + 1;
+        api.ajax({
+            url: 'http://www.zaixianclock.com/App/Index/haiwaigou',
+            method: 'post',
+            data: {
+                values: {
+                    page: pagecount
+                }
+            }
+        }, function(ret, err) {
+            if (JSON.stringify(ret) !== "[]") {
+                //如果获取成功，将返回的数据进行js模板排列数据
+                if (intData) {
+                    intData = mergerJsonArr(intData, ret);
+                    InitGoodsList(intData);
+                }
+            } else {
+                pagecount -=1;
+            }
+        });
+    }
+
+    //合并两个json数组对象
+    function mergerJsonArr(intData, ret) {
+        var resultJsonObject = [];
+        for (var i = 0; i < intData.length; i++) {
+            resultJsonObject.push(intData[i]);
+        }
+        for (var i = 0; i < ret.length; i++) {
+            resultJsonObject.push(ret[i]);
+        }
+        return resultJsonObject;
+    }
+
+    //apiready后对聚划算frame进行初始化数据的ajax获取
+    function frameInit() {
+        pagecount = 1;
+        api.ajax({
+            url: 'http://www.zaixianclock.com/App/Index/haiwaigou',
+            method: 'post',
+            data: {
+                values: {
+                    page: pagecount
+                }
+            }
+        }, function(ret, err) {
+            if (JSON.stringify(ret) !== "[]") {
+                //如果获取成功，将返回的数据进行js模板排列数据
+                InitGoodsList(ret);
+                intData = ret;
+                pagecount = 0;
+            } else {
+                alert("暂无商品");
+            }
+        });
+    }
+
+    //js模板引擎，用于循环排列商品信息
+    function InitGoodsList(ret) {
+        var datas = ret;
+        var dataText = doT.template($api.dom('#juhsTemp').innerHTML);
+        $api.dom('#juhs').innerHTML = dataText(datas);
+    }
+
+    //在网上图片加载成功后切换图片
+    function ChangePic(node){
+      var nextNode = $api.next(node);
+      $api.css(node,"display:block");
+      $api.css(nextNode,"display:none");
+    }
+
+    //搜索框查询 keyword商品
+    function searchKeyWords() {
+        var el = $api.byId('search-input');
+        var keyword = $api.val(el);
+        api.openWin({
+            name: 'searchWin',
+            url: './searchKey.html',
+            pageParam: {
+                cartId: keyword
+            }
+        });
+        return false;
+    }
+</script>
+
+</html>
